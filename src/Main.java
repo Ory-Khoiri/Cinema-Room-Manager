@@ -6,15 +6,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         System.out.println("Enter the number of rows:");
         int inputRow = scanner.nextInt();
         System.out.println("Enter the number of seats in each row:");
         int inputSeat = scanner.nextInt();
         String[][] x = cinemaSeating(inputRow + 1, inputSeat + 1);
         menu(x, inputRow, inputSeat, true);
-
-
 
     }
 
