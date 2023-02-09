@@ -6,19 +6,48 @@ public class Main {
 
     public static void main(String[] args) {
 
+
         System.out.println("Enter the number of rows:");
         int inputRow = scanner.nextInt();
         System.out.println("Enter the number of seats in each row:");
         int inputSeat = scanner.nextInt();
         String[][] x = cinemaSeating(inputRow + 1, inputSeat + 1);
-        seatingDisplay(x, inputRow + 1, inputSeat + 1);
-        System.out.println("Enter a row number:");
-        int rowNumber = scanner.nextInt();
-        System.out.println("Enter a seat number in that row:");
-        int seatNumber = scanner.nextInt();
-        ticketPrice(rowNumber, seatNumber, inputRow + 1, inputSeat + 1, x);
+        menu(x, inputRow, inputSeat, true);
+
+
 
     }
+
+    static void menu(String[][] seatingArrangement, int inputRow, int inputSeat, boolean bool) {
+        while (bool) {
+            String menuList = """
+                    \n1. Show the seats
+                    2. Buy a ticket
+                    0. Exit
+                    """;
+            System.out.println(menuList);
+            int index = scanner.nextInt();
+
+            switch (index) {
+                case 0:
+                    bool = false;
+                    break;
+                case 1:
+                    seatingDisplay(seatingArrangement, inputRow + 1, inputSeat + 1);
+                    break;
+                case 2:
+                    System.out.println("\nEnter a row number:");
+                    int rowNumber = scanner.nextInt();
+                    System.out.println("Enter a seat number in that row:");
+                    int seatNumber = scanner.nextInt();
+                    ticketPrice(rowNumber, seatNumber, inputRow + 1, inputSeat + 1, seatingArrangement);
+                    break;
+                default:
+                    System.out.println("Invalid Choice");
+            }
+        }
+    }
+
 
     static String[][] cinemaSeating(int row, int column) {
         //Read two positive integer numbers that represent the number of rows and seats in each row and print the seating arrangement like in the first stage.
@@ -54,6 +83,7 @@ public class Main {
     }
 
     static void ticketPrice(int rowNumber, int seatNumber, int row, int column, String[][] seatingArrangement) {
+        seatingArrangement[rowNumber][seatNumber] = "B";
         int totalSeat = (row - 1) * (column - 1);
         int midpoint = (row - 1) / 2;
         if (totalSeat < 60) {
@@ -65,20 +95,6 @@ public class Main {
                 System.out.printf("ticket price: $%d\n", 10);
 
             }
-        }
-        System.out.println("Cinema:");
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++) {
-                if (i == rowNumber && j == seatNumber) {
-                    System.out.printf("B ");
-
-                } else {
-                    System.out.printf("%s ", seatingArrangement[i][j]);
-                }
-            }
-            System.out.println();
-
-
         }
     }
 
