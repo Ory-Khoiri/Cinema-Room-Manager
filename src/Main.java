@@ -77,20 +77,25 @@ public class Main {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     static void ticketPrice(int rowNumber, int seatNumber, int row, int column, String[][] seatingArrangement) {
-        seatingArrangement[rowNumber][seatNumber] = "B";
-        int totalSeat = (row - 1) * (column - 1);
-        int midpoint = (row - 1) / 2;
-        if (totalSeat < 60) {
-            System.out.printf("ticket price: $%d\n", 10);
+        if (seatingArrangement[rowNumber][seatNumber] == "B") {
+            System.out.println("That ticket has already been purchased!");
         } else {
-            if (rowNumber > midpoint) {
-                System.out.printf("ticket price: $%d\n", 8);
-            } else {
+            seatingArrangement[rowNumber][seatNumber] = "B";
+            int totalSeat = (row - 1) * (column - 1);
+            int midpoint = (row - 1) / 2;
+            if (totalSeat < 60) {
                 System.out.printf("ticket price: $%d\n", 10);
+            } else {
+                if (rowNumber > midpoint) {
+                    System.out.printf("ticket price: $%d\n", 8);
+                } else {
+                    System.out.printf("ticket price: $%d\n", 10);
 
+                }
             }
         }
     }
