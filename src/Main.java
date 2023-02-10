@@ -16,10 +16,15 @@ public class Main {
     }
 
     static void menu(String[][] seatingArrangement, int inputRow, int inputSeat, boolean bool) {
+        double ticketPurchased = 0;
+        double inputTotalSeat = inputRow * inputSeat;
+        double currentIncome = 0;
+        double totalIncome = income(inputRow, inputSeat);
         while (bool) {
             String menuList = """
                     \n1. Show the seats
                     2. Buy a ticket
+                    3. Statistics
                     0. Exit
                     """;
             System.out.println(menuList);
@@ -37,7 +42,31 @@ public class Main {
                     int rowNumber = scanner.nextInt();
                     System.out.println("Enter a seat number in that row:");
                     int seatNumber = scanner.nextInt();
-                    ticketPrice(rowNumber, seatNumber, inputRow + 1, inputSeat + 1, seatingArrangement);
+                    while (rowNumber > inputRow || seatNumber > inputSeat) { //ExceptionHandling
+                        System.out.println("Wrong input!");
+                        System.out.println("\nEnter a row number:");
+                        rowNumber = scanner.nextInt();
+                        System.out.println("Enter a seat number in that row:");
+                        seatNumber = scanner.nextInt();
+                    }
+                    while (seatingArrangement[rowNumber][seatNumber] == "B") { //ExceptionHandling
+                        System.out.println("That ticket has already been purchased!");
+                        System.out.println("\nEnter a row number:");
+                        rowNumber = scanner.nextInt();
+                        System.out.println("Enter a seat number in that row:");
+                        seatNumber = scanner.nextInt();
+                    }
+                    currentIncome += ticketPrice(rowNumber, seatNumber, inputRow + 1, inputSeat + 1, seatingArrangement);
+                    ticketPurchased += 1;
+                    break;
+                case 3:
+                    // to get decimal both current and total has to be double type
+                    // use number of ticket sold as percentage to get average seat sold
+                    double percentage = (ticketPurchased / inputTotalSeat) * 100;
+                    System.out.printf("Number of purchased tickets: %.0f \n", ticketPurchased);
+                    System.out.printf("Percentage: %.2f%% \n", percentage);
+                    System.out.printf("Current income: $%.0f \n", currentIncome);
+                    System.out.printf("Total income: $%.0f \n", totalIncome);
                     break;
                 default:
                     System.out.println("Invalid Choice");
@@ -80,27 +109,27 @@ public class Main {
         System.out.println();
     }
 
-    static void ticketPrice(int rowNumber, int seatNumber, int row, int column, String[][] seatingArrangement) {
-        if (seatingArrangement[rowNumber][seatNumber] == "B") {
-            System.out.println("That ticket has already been purchased!");
-        } else {
-            seatingArrangement[rowNumber][seatNumber] = "B";
-            int totalSeat = (row - 1) * (column - 1);
-            int midpoint = (row - 1) / 2;
-            if (totalSeat < 60) {
-                System.out.printf("ticket price: $%d\n", 10);
-            } else {
-                if (rowNumber > midpoint) {
-                    System.out.printf("ticket price: $%d\n", 8);
-                } else {
-                    System.out.printf("ticket price: $%d\n", 10);
+    static double ticketPrice(int rowNumber, int seatNumber, int row, int column, String[][] seatingArrangement) {
 
-                }
+        seatingArrangement[rowNumber][seatNumber] = "B";
+        int totalSeat = (row - 1) * (column - 1);
+        int midpoint = (row - 1) / 2;
+        if (totalSeat < 60) {
+            System.out.printf("ticket price: $%d\n", 10);
+            return 10;
+        } else {
+            if (rowNumber > midpoint) {
+                System.out.printf("ticket price: $%d\n", 8);
+                return 8;
+            } else {
+                System.out.printf("ticket price: $%d\n", 10);
+                return 10;
+
             }
         }
     }
 
-        static void income(int row, int seat){
+        static double income(int row, int seat){
             //If the total number of seats in the screen room is not more than 60, then the price of each ticket is 10 dollars.
             //In a larger room, the tickets are 10 dollars for the front half of the rows and 8 dollars for the back half.
             // Please note that the number of rows can be odd, for example, 9 rows. In this case, the first half is the first 4 rows,
@@ -112,19 +141,18 @@ public class Main {
             int secondHalf;
             if (totalSeat < 60) { // total seat less than 60 each ticket cost 10 dollar
                 ticket = 10;
-                System.out.printf("$%d", totalSeat * ticket);
+                return totalSeat * ticket;
             } else {
                 if (row % 2 == 0) { // if the row is even
                     rowDivision = (row / 2);
                     firstHalf = rowDivision * 10 * seat; // first half row seat cost 10 $
                     secondHalf = rowDivision * 8 * seat; // second half row seat cost 8$
-                    System.out.printf("$%d", firstHalf + secondHalf);
                 } else { // if the row is odd
                     rowDivision = (row - 1) / 2;
                     firstHalf = (rowDivision) * 10 * seat; // first half (n rows)
                     secondHalf = (rowDivision + 1) * 8 * seat; // second half (n + 1) rows
-                    System.out.printf("$%d", firstHalf + secondHalf);
                 }
+                return firstHalf + secondHalf;
             }
         }
     }
